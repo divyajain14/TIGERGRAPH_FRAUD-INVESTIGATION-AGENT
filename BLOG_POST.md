@@ -113,7 +113,7 @@ Just built an Agentic Fraud Investigator powered by @TigerGraphDB for the Hacker
 
 Our AI agent navigates 590k+ transactions, performs multi-hop GSQL traversals to uncover bot syndicates, resolves uncertainty with controlled evidence gathering, and recommends Next-Best Actions under strict banking policies.
 
-Check out our full architecture, graph schema, and 20 benchmark case findings: [Link to Repo/Blog]
+Check out our full architecture, graph schema, and 20 benchmark case findings: https://github.com/divyajain14/TIGERGRAPH_FRAUD-INVESTIGATION-AGENT
 
 #TigerGraph #GraphRAG #AI #FinTech #AgenticAI #FraudDetection #HHGOA
 ```
