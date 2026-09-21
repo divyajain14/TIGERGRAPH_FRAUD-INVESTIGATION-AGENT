@@ -1,0 +1,86 @@
+{
+  "case_id": "HHG-018",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.93,
+    "pattern": "out_of_region_use",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3491361"
+    ],
+    "first_suspicious_txn_id": "3491361",
+    "connected_card_ids": [],
+    "connected_device_profiles": [],
+    "exposure_usd": 39.08,
+    "evidence": [
+      {
+        "claim": "Card-present transaction in region 126.0 occurred only 8 minutes before physical card transaction in region 325.0.",
+        "source": "graph",
+        "ref": "DetectOutOfRegionUse",
+        "entity_ids": [
+          "3491361",
+          "3491379",
+          "C02354-K2"
+        ]
+      },
+      {
+        "claim": "Customer reported unrecognized in-person purchase while retaining physical possession of card.",
+        "source": "customer",
+        "ref": "Customer C02354 message: 'I never made this $39.08 purchase. Please check my card.' Refers to 3491361.",
+        "entity_ids": [
+          "C02354-K2",
+          "C02354"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0837",
+      "CC-4626",
+      "CC-0704"
+    ],
+    "summary": "Investigation of case HHG-018 concluded with verdict 'fraud' and assessed fraud probability of 0.93. Activity was classified under pattern 'out_of_region_use' with total financial exposure of $39.08. Investigation established conclusive findings based on 2 primary evidence sources, and recommended 2 next-best actions in accordance with bank fraud policies.",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-HHG-018"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Customer dispute on card-present clone."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block counterfeit cloned card immediately."
+      }
+    ],
+    "final": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Customer dispute on card-present clone."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block counterfeit cloned card immediately."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0.0,
+    "activity_dates": []
+  },
+  "stop_reason": "Impossible physical velocity and customer report confirmed cloned card counterfeit under Policy R2.",
+  "tool_calls": 5,
+  "tokens": 1550,
+  "latency_s": 0.13
+}

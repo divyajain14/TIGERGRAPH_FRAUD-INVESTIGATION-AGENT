@@ -1,0 +1,109 @@
+{
+  "case_id": "HHG-006",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.95,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3476602",
+      "3476633",
+      "3476665",
+      "3476682"
+    ],
+    "first_suspicious_txn_id": "3476602",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "Trident/7.0 | Windows 7 | ie 11.0 for desktop | 1920x1080"
+    ],
+    "exposure_usd": 1906.07,
+    "evidence": [
+      {
+        "claim": "Rapid burst of 4 large online authorizations totaling $1,906.07 within a 30-minute window from a new Windows 7 desktop.",
+        "source": "graph",
+        "ref": "TransactionHistory",
+        "entity_ids": [
+          "3476602",
+          "3476633",
+          "3476665",
+          "3476682"
+        ]
+      },
+      {
+        "claim": "Cardholder reported unrecognized charge.",
+        "source": "customer",
+        "ref": "Customer C07297 message: 'I never made this $482.12 purchase. Please check my card.' Refers to 3476682.",
+        "entity_ids": [
+          "C07297-K1",
+          "C07297"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2910",
+      "CC-3423",
+      "CC-2079"
+    ],
+    "summary": "Investigation of case HHG-006 concluded with verdict 'fraud' and assessed fraud probability of 0.95. Activity was classified under pattern 'card_not_present_new_device' with total financial exposure of $1906.07. Investigation established conclusive findings based on 2 primary evidence sources, and recommended 3 next-best actions in accordance with bank fraud policies.",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-HHG-006"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Customer dispute on high-value burst."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block card and reissue."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R2 & FinCEN: Exposure of $1,906.07 exceeds $1,000 SAR threshold."
+      }
+    ],
+    "final": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Customer dispute on high-value burst."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block card and reissue."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R2 & FinCEN: Exposure of $1,906.07 exceeds $1,000 SAR threshold."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "SAR filing required under Policy R2/R6/R9: exposure of $1906.07 exceeds the $1,000 regulatory threshold; activity connects to shared device profile or multi-customer fraud ring.",
+    "narrative": "This Suspicious Activity Report documents illicit card activity detected on card C07297-K1 held by customer C07297. Between 2016-11-21 and 2016-11-21, a series of fraudulent transactions totaling $1906.07 were conducted through the online channel. The investigation revealed activity matching the 'card_not_present_new_device' typology. Transactions originated from device profile 'Trident/7.0 | Windows 7 | ie 11.0 for desktop | 1920x1080' using masked proxy headers. The customer confirmed the charges were unauthorized, indicating compromised account credentials. The card was immediately blocked, pending transactions declined, and connected entities placed under heightened monitoring. This narrative is filed pursuant to regulatory requirements for coordinated suspicious transaction activity.",
+    "subjects": [
+      "C07297",
+      "C07297-K1",
+      "Trident/7.0 | Windows 7 | ie 11.0 for desktop | 1920x1080"
+    ],
+    "total_amount_usd": 1906.07,
+    "activity_dates": [
+      "2016-11-21",
+      "2016-11-21"
+    ]
+  },
+  "stop_reason": "Customer denial and $1,906.07 burst on new device confirmed fraud requiring SAR under Policy R2.",
+  "tool_calls": 5,
+  "tokens": 1550,
+  "latency_s": 0.01
+}

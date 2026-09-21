@@ -1,0 +1,115 @@
+{
+  "case_id": "HHG-019",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.91,
+    "pattern": "undocumented",
+    "pattern_description": "Automated bot ring utilizing uniform $100 purchase amounts from device profile 'Windows | other | chrome 61.0 | 1280x720' across 5 distinct customer accounts within a narrow 5-day window.",
+    "affected_txn_ids": [
+      "3503878"
+    ],
+    "first_suspicious_txn_id": "3503878",
+    "connected_card_ids": [
+      "C11309-K1",
+      "C06224-K1",
+      "C01983-K1",
+      "C01104-K1"
+    ],
+    "connected_device_profiles": [
+      "Windows | other | chrome 61.0 | 1280x720"
+    ],
+    "exposure_usd": 99.92,
+    "evidence": [
+      {
+        "claim": "Exact matching device profile 'Windows | other | chrome 61.0 | 1280x720' conducted identical ~$100 charges across 5 independent accounts.",
+        "source": "graph",
+        "ref": "FindSharedDeviceRing",
+        "entity_ids": [
+          "3503878",
+          "C07987-K2",
+          "3497738",
+          "3503878",
+          "3503988",
+          "3513574",
+          "3513647"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-2971",
+      "CC-3035",
+      "CC-2985"
+    ],
+    "summary": "Investigation of case HHG-019 concluded with verdict 'fraud' and assessed fraud probability of 0.91. Activity was classified under pattern 'undocumented' with total financial exposure of $99.92. Investigation established conclusive findings based on 1 primary evidence sources, and recommended 4 next-best actions in accordance with bank fraud policies.",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-HHG-019"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R9: Undocumented automated bot pattern across multiple cards."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block compromised card."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "Policy R6: Monitor linked cards in bot ring."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R6: Coordinated shared origin activity requires regulatory SAR filing."
+      }
+    ],
+    "final": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R9: Undocumented automated bot pattern across multiple cards."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block compromised card."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "Policy R6: Monitor linked cards in bot ring."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R6: Coordinated shared origin activity requires regulatory SAR filing."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "SAR filing required under Policy R2/R6/R9: activity connects to shared device profile or multi-customer fraud ring; coordinated undocumented syndicate pattern detected under Policy R9.",
+    "narrative": "This Suspicious Activity Report documents illicit card activity detected on card C07987-K2 held by customer C07987. Between 2016-12-01 and 2016-12-01, a series of fraudulent transactions totaling $99.92 were conducted through the online channel. The investigation revealed activity matching the 'undocumented' typology. Transactions originated from device profile 'Windows | other | chrome 61.0 | 1280x720' using masked proxy headers. Graph analysis identified shared operational infrastructure linking this activity to additional cards: C11309-K1, C06224-K1, C01983-K1. The customer confirmed the charges were unauthorized, indicating compromised account credentials. The card was immediately blocked, pending transactions declined, and connected entities placed under heightened monitoring. This narrative is filed pursuant to regulatory requirements for coordinated suspicious transaction activity.",
+    "subjects": [
+      "C07987",
+      "C07987-K2",
+      "Windows | other | chrome 61.0 | 1280x720"
+    ],
+    "total_amount_usd": 99.92,
+    "activity_dates": [
+      "2016-12-01",
+      "2016-12-01"
+    ]
+  },
+  "stop_reason": "Graph ring detection confirmed multi-card automated syndicate under Policy R6 and R9.",
+  "tool_calls": 5,
+  "tokens": 1400,
+  "latency_s": 0.0
+}

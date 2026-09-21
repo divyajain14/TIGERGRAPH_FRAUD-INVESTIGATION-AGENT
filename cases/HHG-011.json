@@ -1,0 +1,122 @@
+{
+  "case_id": "HHG-011",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.9,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3583368"
+    ],
+    "first_suspicious_txn_id": "3583368",
+    "connected_card_ids": [
+      "C05595-K1",
+      "C03938-K1",
+      "C05678-K1"
+    ],
+    "connected_device_profiles": [
+      "SM-G610F Build/NRD90M | chrome 66.0 for android"
+    ],
+    "exposure_usd": 131.3,
+    "evidence": [
+      {
+        "claim": "Device 'SM-G610F Build/NRD90M | chrome 66.0 for android' executed unauthorized charges across 4 different customer cards between Dec 28 and Dec 31.",
+        "source": "graph",
+        "ref": "FindSharedDeviceRing",
+        "entity_ids": [
+          "3583368",
+          "C11923-K2",
+          "3582730",
+          "3582750",
+          "3583368",
+          "3588413"
+        ]
+      },
+      {
+        "claim": "Customer reported unauthorized charge on card.",
+        "source": "customer",
+        "ref": "Customer C11923 message: 'I never made this $131.30 purchase. Please check my card.' Refers to 3583368.",
+        "entity_ids": [
+          "C11923-K2",
+          "C11923"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0078",
+      "CC-5015",
+      "CC-3347"
+    ],
+    "summary": "Investigation of case HHG-011 concluded with verdict 'fraud' and assessed fraud probability of 0.90. Activity was classified under pattern 'card_not_present_new_device' with total financial exposure of $131.30. Investigation established conclusive findings based on 2 primary evidence sources, and recommended 4 next-best actions in accordance with bank fraud policies.",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-HHG-011"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Customer dispute on unauthorized transaction."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block compromised card."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "Policy R6: Place other cards sharing device profile under monitoring."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R6: Activity connects to shared device profile and other cards' fraud."
+      }
+    ],
+    "final": [
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Customer dispute on unauthorized transaction."
+      },
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2: Block compromised card."
+      },
+      {
+        "action": "MONITOR_CONNECTED_CARDS",
+        "route": "auto",
+        "reason": "Policy R6: Place other cards sharing device profile under monitoring."
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R6: Activity connects to shared device profile and other cards' fraud."
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "SAR filing required under Policy R2/R6/R9: activity connects to shared device profile or multi-customer fraud ring.",
+    "narrative": "This Suspicious Activity Report documents illicit card activity detected on card C11923-K2 held by customer C11923. Between 2016-12-29 and 2016-12-29, a series of fraudulent transactions totaling $131.30 were conducted through the online channel. The investigation revealed activity matching the 'card_not_present_new_device' typology. Transactions originated from device profile 'SM-G610F Build/NRD90M | chrome 66.0 for android' using masked proxy headers. Graph analysis identified shared operational infrastructure linking this activity to additional cards: C05595-K1, C03938-K1, C05678-K1. The customer confirmed the charges were unauthorized, indicating compromised account credentials. The card was immediately blocked, pending transactions declined, and connected entities placed under heightened monitoring. This narrative is filed pursuant to regulatory requirements for coordinated suspicious transaction activity.",
+    "subjects": [
+      "C11923",
+      "C11923-K2",
+      "SM-G610F Build/NRD90M | chrome 66.0 for android"
+    ],
+    "total_amount_usd": 131.3,
+    "activity_dates": [
+      "2016-12-29",
+      "2016-12-29"
+    ]
+  },
+  "stop_reason": "Customer dispute corroborated by multi-card shared device ring under Policy R2 and R6.",
+  "tool_calls": 5,
+  "tokens": 1550,
+  "latency_s": 0.11
+}

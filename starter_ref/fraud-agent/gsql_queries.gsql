@@ -1,0 +1,97 @@
+// =============================================================
+// gsql_queries.gsql
+// Real TigerGraph GSQL — use this if/when you get TigerGraph
+// Cloud access from the sponsor. These queries do exactly what
+// graph_engine.py simulates locally with networkx.
+//
+// Load into a graph named "FraudGraph" with:
+//   VERTEX Account (PRIMARY_ID id STRING, name STRING, city STRING, opened_date STRING)
+//   VERTEX Device  (PRIMARY_ID id STRING)
+//   DIRECTED EDGE Transacted_With (FROM Account, TO Account, txn_id STRING, amount DOUBLE, timestamp STRING)
+//   UNDIRECTED EDGE Uses_Device (FROM Account, TO Device)
+// =============================================================
+
+CREATE VERTEX Account (PRIMARY_ID id STRING, name STRING, city STRING, opened_date STRING)
+CREATE VERTEX Device (PRIMARY_ID id STRING)
+CREATE DIRECTED EDGE Transacted_With (FROM Account, TO Account, txn_id STRING, amount DOUBLE, timestamp STRING)
+CREATE UNDIRECTED EDGE Uses_Device (FROM Account, TO Device)
+
+CREATE GRAPH FraudGraph (Account, Device, Transacted_With, Uses_Device)
+
+// -------------------------------------------------------------
+// Query 1: FindCycles
+// Detect circular money movement starting/ending at the given
+// account within max_hops — classic layering/laundering pattern.
+// -------------------------------------------------------------
+CREATE QUERY FindCycles(VERTEX<Account> start, INT max_hops=4) FOR GRAPH FraudGraph {
+  SetAccum<VERTEX<Account>> @@visited;
+  ListAccum<EDGE> @@path;
+
+  Start = {start};
+  Frontier = Start;
+  WHILE Frontier.size() > 0 LIMIT max_hops DO
+    Frontier = SELECT t
+               FROM Frontier:s -(Transacted_With:e)-> Account:t
+               ACCUM @@path += e
+               HAVING t == start OR t NOT IN @@visited;
+    @@visited += Frontier;
+  END;
+
+  PRINT @@path AS suspicious_cycle_edges;
+}
+
+// -------------------------------------------------------------
+// Query 2: SharedDeviceRing
+// Find other accounts that log in from the same device(s) as
+// the given account — a strong signal of one operator running
+// multiple fake/mule accounts.
+// -------------------------------------------------------------
+CREATE QUERY SharedDeviceRing(VERTEX<Account> start) FOR GRAPH FraudGraph {
+  Start = {start};
+  Devices = SELECT d FROM Start:s -(Uses_Device:e)- Device:d;
+  RelatedAccounts = SELECT a FROM Devices:d -(Uses_Device:e)- Account:a
+                     WHERE a != start;
+  PRINT RelatedAccounts;
+}
+
+// -------------------------------------------------------------
+// Query 3: SmurfingDetector
+// Find accounts sending many transactions just under a reporting
+// threshold — a classic way to avoid triggering automatic flags.
+// -------------------------------------------------------------
+CREATE QUERY SmurfingDetector(VERTEX<Account> start, DOUBLE threshold=10000, INT min_count=5) FOR GRAPH FraudGraph {
+  SumAccum<INT> @@nearThresholdCount;
+  ListAccum<EDGE> @@flaggedTxns;
+
+  Start = {start};
+  Out = SELECT t FROM Start:s -(Transacted_With:e)-> Account:t
+        WHERE e.amount >= threshold * 0.9 AND e.amount < threshold
+        ACCUM @@nearThresholdCount += 1, @@flaggedTxns += e;
+
+  PRINT @@nearThresholdCount AS near_threshold_txn_count;
+  PRINT @@flaggedTxns AS flagged_transactions;
+  PRINT (@@nearThresholdCount >= min_count) AS is_likely_smurfing;
+}
+
+// -------------------------------------------------------------
+// Query 4: GetNeighborhood
+// Pull a small 2-hop subgraph around a flagged account so the
+// AI agent has concrete evidence to reason over.
+// -------------------------------------------------------------
+CREATE QUERY GetNeighborhood(VERTEX<Account> start, INT hops=2) FOR GRAPH FraudGraph {
+  SetAccum<VERTEX> @@seen;
+  Frontier = {start};
+  @@seen += Frontier;
+
+  WHILE Frontier.size() > 0 LIMIT hops DO
+    Frontier = SELECT t FROM Frontier:s -(Transacted_With:e)-> Account:t
+               WHERE t NOT IN @@seen
+               ACCUM @@seen += t;
+  END;
+
+  Result = @@seen;
+  PRINT Result;
+}
+
+// To run: `gsql FindCycles("A101", 4);` etc. after installing the queries with
+// `INSTALL QUERY FindCycles` (and the others) inside the GSQL shell.
